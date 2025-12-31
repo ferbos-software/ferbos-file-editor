@@ -19,6 +19,7 @@ class TestAppendConfigLines:
         hass = MagicMock(spec=HomeAssistant)
         hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(mock_config_file))
+        hass.services = MagicMock()
         hass.services.async_call = AsyncMock()
 
         payload = {
@@ -71,6 +72,7 @@ class TestAppendConfigLines:
         hass = MagicMock(spec=HomeAssistant)
         hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(mock_config_file))
+        hass.services = MagicMock()
         hass.services.async_call = AsyncMock()
 
         payload = {
@@ -99,7 +101,7 @@ class TestHandleUIFileOperation:
 
         hass = MagicMock(spec=HomeAssistant)
         hass.config = MagicMock()
-        hass.config.path = MagicMock(return_value=str(temp_config_dir))
+        hass.config.path = MagicMock(side_effect=lambda x: str(temp_config_dir / x) if x else str(temp_config_dir))
 
         args = {
             "path": "test_file.yaml",
@@ -152,7 +154,7 @@ class TestHandleUIFileOperation:
 
         hass = MagicMock(spec=HomeAssistant)
         hass.config = MagicMock()
-        hass.config.path = MagicMock(return_value=str(temp_config_dir))
+        hass.config.path = MagicMock(side_effect=lambda x: str(temp_config_dir / x) if x else str(temp_config_dir))
 
         # Create existing file
         existing_file = temp_config_dir / "existing.yaml"
@@ -176,7 +178,7 @@ class TestHandleUIFileOperation:
 
         hass = MagicMock(spec=HomeAssistant)
         hass.config = MagicMock()
-        hass.config.path = MagicMock(return_value=str(temp_config_dir))
+        hass.config.path = MagicMock(side_effect=lambda x: str(temp_config_dir / x) if x else str(temp_config_dir))
 
         args = {
             "path": "test_lines.yaml",
