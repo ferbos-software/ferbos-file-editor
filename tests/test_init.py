@@ -17,6 +17,7 @@ class TestAppendConfigLines:
         from custom_components.ferbos_file_editor import _append_config_lines
 
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(mock_config_file))
         hass.services.async_call = AsyncMock()
 
