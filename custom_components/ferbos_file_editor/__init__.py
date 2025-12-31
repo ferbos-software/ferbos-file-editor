@@ -7,18 +7,14 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import voluptuous as vol
-
 from homeassistant.components import websocket_api
 from homeassistant.helpers import config_validation as cv
 
-from .const import DOMAIN
+from .const import DOMAIN as DOMAIN
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.typing import ConfigType
-else:
-    from homeassistant.core import HomeAssistant  # noqa: TC002
-    from homeassistant.helpers.typing import ConfigType  # noqa: TC002
 
 _LOGGER = logging.getLogger(__name__)
 
