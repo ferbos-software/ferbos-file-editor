@@ -1,9 +1,9 @@
 """Unit tests for config_flow.py module."""
 from __future__ import annotations
 
-import pytest
 from unittest.mock import MagicMock
 
+import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
@@ -20,9 +20,9 @@ class TestFerbosFileEditorConfigFlow:
         flow = FerbosFileEditorConfigFlow()
         flow.hass = MagicMock(spec=HomeAssistant)
         flow._async_handle_discovery_without_unique_id = MagicMock()
-        
+
         result = await flow.async_step_user()
-        
+
         assert result["type"] == FlowResultType.FORM
         assert result["step_id"] == "user"
 
@@ -32,10 +32,10 @@ class TestFerbosFileEditorConfigFlow:
         flow = FerbosFileEditorConfigFlow()
         flow.hass = MagicMock(spec=HomeAssistant)
         flow._async_handle_discovery_without_unique_id = MagicMock()
-        
+
         user_input = {}
         result = await flow.async_step_user(user_input=user_input)
-        
+
         assert result["type"] == FlowResultType.CREATE_ENTRY
         assert result["title"] == "Ferbos File Editor"
 

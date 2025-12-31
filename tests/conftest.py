@@ -1,12 +1,12 @@
 """Pytest configuration and fixtures."""
 from __future__ import annotations
 
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-from pathlib import Path
-import tempfile
 import shutil
+import tempfile
+from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock, patch
 
+import pytest
 from homeassistant.core import HomeAssistant
 
 
@@ -16,7 +16,7 @@ def pytest_configure(config):
     # This is needed on Windows where asyncio uses sockets for event loop creation
     import pytest_socket
     pytest_socket.disable_socket()
-    
+
     # Re-enable socket for asyncio operations
     import socket
     original_socket = socket.socket
@@ -26,14 +26,13 @@ def pytest_configure(config):
 @pytest.fixture
 def hass():
     """Create a Home Assistant instance for testing."""
-    from homeassistant.core import HomeAssistant
-    
-    hass_instance = MagicMock(spec=HomeAssistant)
-    hass_instance.config = MagicMock()
-    hass_instance.config.path = MagicMock(return_value=str(Path(tempfile.mkdtemp()) / "config"))
-    hass_instance.services = MagicMock()
-    hass_instance.services.async_call = AsyncMock()
-    yield hass_instance
+
+    with patch("homeassistant.core.HomeAssistant") as mock_hass:
+        hass_instance = MagicMock(spec=HomeAssistant)
+        hass_instance.config.path = MagicMock()
+        hass_instance.services.async_call = AsyncMock()
+        hass_instance.config.path.return_value = str(Path(tempfile.mkdtemp()) / "config")
+        yield hass_instance
 
 
 @pytest.fixture
