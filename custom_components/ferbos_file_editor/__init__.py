@@ -1,15 +1,24 @@
 from __future__ import annotations
-from homeassistant.core import HomeAssistant
-from homeassistant.components import websocket_api
-from homeassistant.helpers.typing import ConfigType
-from homeassistant.helpers import config_validation as cv
-import voluptuous as vol
-from pathlib import Path
-from datetime import datetime
-import shutil
+
 import logging
+import shutil
+from datetime import datetime
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+import voluptuous as vol
+
+from homeassistant.components import websocket_api
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.typing import ConfigType
+else:
+    from homeassistant.core import HomeAssistant  # noqa: TC002
+    from homeassistant.helpers.typing import ConfigType  # noqa: TC002
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +43,7 @@ async def _append_config_lines(hass: HomeAssistant, payload: dict) -> dict:
             backup_path = config_path.with_suffix(f".backup.{ts}.yaml")
             shutil.copy2(config_path.as_posix(), backup_path.as_posix())
 
-        content_to_append = "\n".join([str(l) for l in lines])
+        content_to_append = "\n".join([str(line) for line in lines])
         # Ensure separation by a newline
         with open(config_path, "a", encoding="utf-8") as f:
             if not content_to_append.endswith("\n"):
@@ -66,20 +75,20 @@ async def _handle_ui_file_operation(hass: HomeAssistant, args: dict) -> dict:
     # Ensure path is relative and safe
     if file_path.startswith("/"):
         file_path = file_path[1:]
-    
+
     # Prevent directory traversal
     if ".." in file_path or file_path.startswith("../"):
         return {"success": False, "error": {"code": "invalid", "message": "Invalid path"}}
 
     target_path = Path(hass.config.path(file_path))
-    
+
     # Debug: log the actual path being used
     _LOGGER.info(f"Writing to path: {target_path} (exists: {target_path.exists()})")
-    
+
     try:
         # Create parent directories if they don't exist
         target_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Backup existing file if requested and file exists
         if backup and target_path.exists():
             ts = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -91,7 +100,7 @@ async def _handle_ui_file_operation(hass: HomeAssistant, args: dict) -> dict:
         if template:
             content = template
         elif lines:
-            content = "\n".join([str(l) for l in lines])
+            content = "\n".join([str(line) for line in lines])
         else:
             return {"success": False, "error": {"code": "invalid", "message": "Missing template or lines"}}
 
@@ -104,7 +113,7 @@ async def _handle_ui_file_operation(hass: HomeAssistant, args: dict) -> dict:
             f.write(content)
             if not content.endswith("\n"):
                 f.write("\n")
-        
+
         _LOGGER.info(f"Successfully wrote {len(content)} characters to {target_path}")
         return {"success": True, "message": f"File {file_path} written successfully"}
     except Exception as exc:
@@ -113,7 +122,7 @@ async def _handle_ui_file_operation(hass: HomeAssistant, args: dict) -> dict:
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up Ferbos File Editor via YAML configuration."""
-    
+
     # WebSocket: ferbos/config/add → append lines to configuration.yaml
     @websocket_api.websocket_command({
         "type": "ferbos/config/add",
@@ -173,7 +182,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry) -> bool:
     """Set up Ferbos File Editor from a config entry."""
-    
+
     @websocket_api.websocket_command({
         "type": "ferbos/config/add",
         "id": int,
