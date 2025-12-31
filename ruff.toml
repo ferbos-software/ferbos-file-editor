@@ -1,5 +1,7 @@
 target-version = "py311"
 line-length = 88
+
+[lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -23,18 +25,18 @@ ignore = [
     "ARG002", # unused method argument
 ]
 
-[tool.ruff.format]
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ARG",  # Allow unused arguments in tests
+    "S101", # Allow assert statements in tests
+]
+
+[format]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.ruff.isort]
+[lint.isort]
 known-first-party = ["ferbos_file_editor"]
-
-[tool.ruff.per-file-ignores]
-"tests/**/*.py" = [
-    "ARG",  # Allow unused arguments in tests
-    "S101", # Allow assert statements in tests
-]
 
