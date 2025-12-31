@@ -41,6 +41,7 @@ class TestAppendConfigLines:
         from custom_components.ferbos_file_editor import _append_config_lines
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         
         payload = {"lines": "not a list"}
         
@@ -55,6 +56,7 @@ class TestAppendConfigLines:
         from custom_components.ferbos_file_editor import _append_config_lines
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value="/nonexistent/path/configuration.yaml")
         
         payload = {"lines": ["test"]}
@@ -70,7 +72,9 @@ class TestAppendConfigLines:
         from custom_components.ferbos_file_editor import _append_config_lines
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(mock_config_file))
+        hass.services = MagicMock()
         hass.services.async_call = AsyncMock()
         
         payload = {
@@ -98,6 +102,7 @@ class TestHandleUIFileOperation:
         from custom_components.ferbos_file_editor import _handle_ui_file_operation
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(temp_config_dir))
         
         args = {
@@ -119,6 +124,7 @@ class TestHandleUIFileOperation:
         from custom_components.ferbos_file_editor import _handle_ui_file_operation
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         
         args = {"template": "content"}
         
@@ -133,6 +139,7 @@ class TestHandleUIFileOperation:
         from custom_components.ferbos_file_editor import _handle_ui_file_operation
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         
         args = {
             "path": "../../etc/passwd",
@@ -150,6 +157,7 @@ class TestHandleUIFileOperation:
         from custom_components.ferbos_file_editor import _handle_ui_file_operation
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(temp_config_dir))
         
         # Create existing file
@@ -173,6 +181,7 @@ class TestHandleUIFileOperation:
         from custom_components.ferbos_file_editor import _handle_ui_file_operation
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(temp_config_dir))
         
         args = {

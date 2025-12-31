@@ -28,12 +28,12 @@ def hass():
     """Create a Home Assistant instance for testing."""
     from homeassistant.core import HomeAssistant
     
-    with patch("homeassistant.core.HomeAssistant") as mock_hass:
-        hass_instance = MagicMock(spec=HomeAssistant)
-        hass_instance.config.path = MagicMock()
-        hass_instance.services.async_call = AsyncMock()
-        hass_instance.config.path.return_value = str(Path(tempfile.mkdtemp()) / "config")
-        yield hass_instance
+    hass_instance = MagicMock(spec=HomeAssistant)
+    hass_instance.config = MagicMock()
+    hass_instance.config.path = MagicMock(return_value=str(Path(tempfile.mkdtemp()) / "config"))
+    hass_instance.services = MagicMock()
+    hass_instance.services.async_call = AsyncMock()
+    yield hass_instance
 
 
 @pytest.fixture

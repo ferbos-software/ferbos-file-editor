@@ -21,6 +21,7 @@ class TestSmokeTests:
         from custom_components.ferbos_file_editor import async_setup
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(Path(tempfile.mkdtemp())))
         
         with patch("custom_components.ferbos_file_editor.websocket_api.async_register_command") as mock_register:
@@ -36,6 +37,7 @@ class TestSmokeTests:
         from custom_components.ferbos_file_editor import async_setup_entry
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         hass.config.path = MagicMock(return_value=str(Path(tempfile.mkdtemp())))
         entry = MagicMock()
         
@@ -50,6 +52,7 @@ class TestSmokeTests:
         from custom_components.ferbos_file_editor import async_unload_entry
         
         hass = MagicMock(spec=HomeAssistant)
+        hass.config = MagicMock()
         entry = MagicMock()
         
         result = await async_unload_entry(hass, entry)
